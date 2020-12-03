@@ -19,6 +19,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -33,13 +38,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import platformpbp.uajy.quickresto.API.RegistAPI;
 import platformpbp.uajy.quickresto.dabase.DatabaseClient;
 import platformpbp.uajy.quickresto.model.User;
+
+import static com.android.volley.Request.Method.POST;
+import static java.security.AccessController.getContext;
 
 public class SignUp extends AppCompatActivity {
     private Button signup,back;
@@ -115,7 +129,6 @@ public class SignUp extends AppCompatActivity {
                     table_user.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                             if (dataSnapshot.child(fullname.getText().toString()).exists()) {
                                 mDialog.dismiss();
                                 Toast.makeText(SignUp.this, "Name already exist.", Toast.LENGTH_SHORT).show();
@@ -142,7 +155,7 @@ public class SignUp extends AppCompatActivity {
                                                         table_user.child(enEmail).setValue(user);
                                                         sendEmailVerification();
                                                         addUser();
-
+                                                        addUsertoAPI(fullname.getText().toString(), phone.getText().toString(), email.getText().toString(), enkrip);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -285,6 +298,46 @@ public class SignUp extends AppCompatActivity {
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(0, builder.build());
+    }
+    private void addUsertoAPI(final String nama, final String number, final String mail,final String pwd){
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+
+        StringRequest stringRequest = new StringRequest(POST, RegistAPI.URL_REGIST, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.getString("status").equals("Success"))
+                    {
+//                        loadFragment(new ViewsBuku());
+                    }
+
+//                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(SignUp.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("name", nama);
+                params.put("phone", number);
+                params.put("email",mail);
+                params.put("password", pwd);
+
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
     }
 
     private void addUser() {

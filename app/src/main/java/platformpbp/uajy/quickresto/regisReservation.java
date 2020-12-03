@@ -149,9 +149,6 @@ public class regisReservation extends AppCompatActivity {
                     intent.putExtra("Time",wketu);
                     startActivity(intent);
                 }
-
-
-
             }
         });
     }
