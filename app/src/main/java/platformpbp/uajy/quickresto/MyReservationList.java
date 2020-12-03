@@ -1,20 +1,21 @@
 package platformpbp.uajy.quickresto;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import platformpbp.uajy.quickresto.model.Reservation;
 
-public class MyReservationMenu extends AppCompatActivity {
+public class MyReservationList extends AppCompatActivity {
+
     private FloatingActionButton backmr;
-    private Button edit,delete;
     TextView nameResto,numb,address,date,time,user;
     String name,no,tgl,wktu,alamat;
 //    Reservation reservt;
@@ -22,7 +23,7 @@ public class MyReservationMenu extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_reservation);
+        setContentView(R.layout.activity_my_reservation_list);
         String username;
         Reservation reserv=new Reservation();
         SharePreferenceClass sp=new SharePreferenceClass(this); //mySql dinyalain
@@ -58,27 +59,13 @@ public class MyReservationMenu extends AppCompatActivity {
 //        date.setText(reservt.dateResrv);
 //        time.setText(reservt.timeResrv);
 
-        edit=(Button) findViewById(R.id.editMyRes);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
-        });
 
-        delete=(Button) findViewById(R.id.deleteMyRes);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
-        });
 
         backmr = (FloatingActionButton) findViewById(R.id.floating_backs);
         backmr.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MyReservationMenu.this,Home.class);
+                Intent intent = new Intent(MyReservationList.this,Home.class);
                 intent.putExtra("resto4",name);
                 intent.putExtra("alamat4",alamat);
                 intent.putExtra("number",no);

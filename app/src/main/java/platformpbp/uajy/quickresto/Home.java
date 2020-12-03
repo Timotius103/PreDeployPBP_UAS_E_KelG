@@ -68,7 +68,7 @@ public class Home extends AppCompatActivity {
         myreserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Home.this,MyReservationMenu.class);
+                Intent intent = new Intent(Home.this,MyReservationList.class);
                 intent.putExtra("resto3",name);
                 intent.putExtra("alamat3",alamt);
                 intent.putExtra("Number",no);

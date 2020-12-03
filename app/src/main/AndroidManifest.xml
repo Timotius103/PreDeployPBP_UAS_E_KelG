@@ -11,8 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Camera.CameraActivity"></activity>
-        <activity android:name=".ProfileEdit"></activity>
+        <activity android:name=".MyReservationList"></activity>
+        <activity android:name=".Camera.CameraActivity" />
+        <activity android:name=".ProfileEdit" />
         <activity android:name=".Profile" />
         <activity android:name=".ThankYouMenu" />
         <activity android:name=".RateMeMenu" />
@@ -24,7 +25,7 @@
         <activity android:name=".SignUp" />
         <activity android:name=".SignIn" />
         <activity android:name=".LoginSignIn" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">

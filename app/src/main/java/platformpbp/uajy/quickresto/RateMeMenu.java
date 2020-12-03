@@ -12,13 +12,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RateMeMenu extends AppCompatActivity {
     private FloatingActionButton back;
-    private Button submit;
+    private Button submit,delete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_me_menu);
 
+        delete = (Button) findViewById(R.id.deleteRate);
+        //
         back = (FloatingActionButton) findViewById(R.id.floating_back);
         submit = (Button) findViewById(R.id.submit);
         final RatingBar ratingRatingBar = (RatingBar) findViewById(R.id.rating_rating_bar);

@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<!--    tools:context=".MyReservationMenu">-->
+    <!--    tools:context=".MyReservationMenu">-->
 
 
     <ImageView
@@ -150,14 +150,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.35"
-            android:padding="30dp">
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:orientation="vertical">
 
             <Button
-                android:id="@+id/back_menu"
+                android:layout_weight="1"
+                android:id="@+id/editMyRes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#03DAC5"
-                android:text="back to menu"
+                android:text="UPDATE RESERVATION"
+                android:textColorLink="#FFFFFF"
+                android:textSize="18dp" />
+
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/deleteMyRes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EA2F2F"
+                android:text="DELETE RESERVATION"
                 android:textColorLink="#FFFFFF"
                 android:textSize="18dp" />
 
@@ -173,5 +186,20 @@
         android:layout_marginTop="7dp"
         android:layout_marginEnd="35dp"
         app:srcCompat="@drawable/user" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_backs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="62dp"
+            android:layout_marginStart="27dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>
