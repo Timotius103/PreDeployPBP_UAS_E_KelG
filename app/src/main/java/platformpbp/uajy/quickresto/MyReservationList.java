@@ -47,11 +47,11 @@ public class MyReservationList extends AppCompatActivity {
         wktu=reserv.getTimeResrv();
 
 
-        nameResto.setText(name);
-        address.setText(alamat);
-        numb.setText(no);
-        date.setText(tgl);
-        time.setText(wktu);
+//        nameResto.setText(name);
+//        address.setText(alamat);
+//        numb.setText(no);
+//        date.setText(tgl);
+//        time.setText(wktu);
 
 //        nameResto.setText(reservt.nameRest);
 //        address.setText(reservt.address);

@@ -156,11 +156,21 @@
 
             <Button
                 android:layout_weight="1"
-                android:id="@+id/backtohome"
+                android:id="@+id/editMyRes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#03DAC5"
-                android:text="BACK TO MENU"
+                android:text="UPDATE RESERVATION"
+                android:textColorLink="#FFFFFF"
+                android:textSize="18dp" />
+
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/deleteMyRes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EA2F2F"
+                android:text="DELETE RESERVATION"
                 android:textColorLink="#FFFFFF"
                 android:textSize="18dp" />
 

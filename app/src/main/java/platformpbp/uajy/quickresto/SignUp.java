@@ -166,7 +166,6 @@ public class SignUp extends AppCompatActivity {
                                         finish();
                                     }
 
-
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -302,7 +301,6 @@ public class SignUp extends AppCompatActivity {
     private void addUsertoAPI(final String nama, final String number, final String mail,final String pwd){
         RequestQueue queue = Volley.newRequestQueue(this);
 
-
         StringRequest stringRequest = new StringRequest(POST, RegistAPI.URL_REGIST, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -313,7 +311,7 @@ public class SignUp extends AppCompatActivity {
 //                        loadFragment(new ViewsBuku());
                     }
 
-//                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUp.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

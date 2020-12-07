@@ -30,6 +30,8 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://mapbox.bintray.com/mapbox' }
+        //Library 2
+        maven { url "https://jitpack.io" }
     }
 }
 
