@@ -23,7 +23,7 @@ public class MyReservationList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_reservation_list);
+        setContentView(R.layout.activity_my_reservation2);
         String username;
         Reservation reserv=new Reservation();
         SharePreferenceClass sp=new SharePreferenceClass(this); //mySql dinyalain

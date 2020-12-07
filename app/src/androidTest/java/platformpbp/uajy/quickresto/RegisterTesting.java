@@ -72,7 +72,7 @@ public class RegisterTesting {
                                 childAtPosition(
                                         withId(R.id.FullName_layout),
                                         0),
-                                0),
+                                1),
                         isDisplayed()));
         textInputEditText.perform(replaceText("Timotius"), closeSoftKeyboard());
 
@@ -162,7 +162,7 @@ public class RegisterTesting {
                                 childAtPosition(
                                         withId(R.id.FullName_layout),
                                         0),
-                                0),
+                                1),
                         isDisplayed()));
         textInputEditText8.perform(replaceText(""));
 
@@ -172,7 +172,7 @@ public class RegisterTesting {
                                 childAtPosition(
                                         withId(R.id.FullName_layout),
                                         0),
-                                0),
+                                1),
                         isDisplayed()));
         textInputEditText9.perform(closeSoftKeyboard());
 

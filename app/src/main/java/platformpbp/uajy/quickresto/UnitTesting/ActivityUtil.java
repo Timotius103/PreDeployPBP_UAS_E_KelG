@@ -4,6 +4,7 @@
 //import android.content.Intent;
 //
 //import platformpbp.uajy.quickresto.MainActivity;
+//import platformpbp.uajy.quickresto.ProfileEdit;
 //import platformpbp.uajy.quickresto.dabase.ReservationDAO;
 //import platformpbp.uajy.quickresto.dabase.UserDAO;
 //
@@ -16,7 +17,7 @@
 //        context.startActivity(new Intent(context, MainActivity.class));
 //    }
 //    public void startUserProfile(UserDAO user) {
-//        Intent i = new Intent(context, UserProfileActivity.class);
+//        Intent i = new Intent(context, ProfileEdit.class);
 //        i.putExtra("id",user.getId());
 //        i.putExtra("name",user.getNama());
 //        i.putExtra("nim",user.getNim());
