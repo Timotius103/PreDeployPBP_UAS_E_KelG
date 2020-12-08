@@ -17,6 +17,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,6 +35,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -39,9 +47,13 @@ import java.util.Map;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import platformpbp.uajy.quickresto.API.PesanAPI;
+import platformpbp.uajy.quickresto.API.RegistAPI;
 import platformpbp.uajy.quickresto.Camera.CameraActivity;
 import platformpbp.uajy.quickresto.dabase.DatabaseClient;
 import platformpbp.uajy.quickresto.model.User;
+
+import static com.android.volley.Request.Method.PUT;
 
 public class ProfileEdit extends AppCompatActivity {
 
@@ -96,6 +108,7 @@ public class ProfileEdit extends AppCompatActivity {
                     currentUser.setFullName(nama);
                     currentUser.setPhone(tlpon);
                     update(currentUser);
+                    updateProfile(currentUser.getMail(),nama,tlpon);
                     uploadImage();
                 }
 
@@ -258,6 +271,52 @@ public class ProfileEdit extends AppCompatActivity {
         byte[] key = digest.digest();
         SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
         return secretKeySpec;
+    }
+
+
+
+    public void updateProfile(final String mail, final String nama, final String tlp){
+        //Pendeklarasian queue
+        System.out.println("EMAIL"+ mail);
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        //Memulai membuat permintaan request menghapus data ke jaringan
+        StringRequest stringRequest = new StringRequest(PUT, RegistAPI.URL_UPDATEUSER + mail, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Disini bagian jika response jaringan berhasil tidak terdapat ganguan/error
+                try {
+                    //Mengubah response string menjadi object
+                    JSONObject obj = new JSONObject(response);
+
+                    //obj.getString("message") digunakan untuk mengambil pesan message dari response
+                    Toast.makeText(ProfileEdit.this, obj.getString("Berhasil Simpan"), Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Disini bagian jika response jaringan terdapat ganguan/error
+                Toast.makeText(ProfileEdit.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("name",nama);
+                params.put("phone",tlp);
+                params.put("email",mail);
+                params.put("password", currentUser.getPass());
+                return params;
+            }
+        };
+
+        //Disini proses penambahan request yang sudah kita buat ke reuest queue yang sudah dideklarasi
+        queue.add(stringRequest);
     }
 
 }

@@ -20,7 +20,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".EditReservaton"></activity>
         <activity android:name=".myReservation2" />
-        <activity android:name=".MyReservationList" />
         <activity android:name=".Camera.CameraActivity" />
         <activity android:name=".ProfileEdit" />
         <activity android:name=".Profile" />

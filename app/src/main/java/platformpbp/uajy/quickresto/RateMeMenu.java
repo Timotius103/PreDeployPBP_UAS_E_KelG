@@ -10,15 +10,30 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import platformpbp.uajy.quickresto.API.PesanAPI;
+import platformpbp.uajy.quickresto.API.RateAPI;
 import platformpbp.uajy.quickresto.dabase.DatabaseClient;
 import platformpbp.uajy.quickresto.model.Pesan;
 import platformpbp.uajy.quickresto.model.Ratting;
 import platformpbp.uajy.quickresto.model.Reservation;
 import platformpbp.uajy.quickresto.model.User;
+
+import static com.android.volley.Request.Method.DELETE;
+import static com.android.volley.Request.Method.POST;
 
 public class RateMeMenu extends AppCompatActivity {
     private FloatingActionButton back;
@@ -46,6 +61,7 @@ public class RateMeMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 deleteRate(currentRate);
+                deleteRateFromAPI(username);
             }
         });
 
@@ -71,8 +87,10 @@ public class RateMeMenu extends AppCompatActivity {
                 startActivity(intent);
                 if(currentRate!=null){
                     deleteRate(currentRate);
+                    deleteRateFromAPI(username);
                 }
                 addRatting();
+                addRatetoAPI(username, ratting);
             }
         });
     }
@@ -139,6 +157,7 @@ public class RateMeMenu extends AppCompatActivity {
         GetRatting get = new GetRatting();
         get.execute();
     }
+
     private void deleteRate(final Ratting rate){
         class DeleteRate extends AsyncTask<Void, Void, Void> {
 
@@ -160,5 +179,73 @@ public class RateMeMenu extends AppCompatActivity {
 
         DeleteRate delete = new DeleteRate();
         delete.execute();
+    }
+
+    private void addRatetoAPI(final String nama, final float rate){
+        System.out.println("EMAIL"+ nama);
+        System.out.println("RATE"+ rate);
+        String ratting = Float.toString(rate);
+        Double rateku = Double.parseDouble(ratting);
+        System.out.println("ASU"+ rateku);
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest stringRequest = new StringRequest(POST, RateAPI.URL_STORE, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.getString("status").equals("Success"))
+                    {
+//                        loadFragment(new ViewsBuku());
+                    }
+
+                    Toast.makeText(RateMeMenu.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(RateMeMenu.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("nama_pengguna", nama);
+                params.put("rating", rateku.toString());
+
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+
+
+    public void deleteRateFromAPI(String name) {
+        //Tambahkan hapus buku disini
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest stringRequest = new StringRequest(DELETE, RateAPI.URL_DELETE + name, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    Toast.makeText(RateMeMenu.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(RateMeMenu.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
     }
 }

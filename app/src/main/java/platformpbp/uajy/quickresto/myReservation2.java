@@ -199,45 +199,4 @@ public class myReservation2 extends AppCompatActivity {
         });
         queue.add(stringRequest);
     }
-//    private void addReserveAPI(final String nama, final String alamat, final String resto, final String no, final String tanggal, final String waktu){
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//
-//        StringRequest stringRequest = new StringRequest(POST, PesanAPI.URL_STOREPESAN, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                try {
-//                    JSONObject obj = new JSONObject(response);
-//                    if(obj.getString("status").equals("Success"))
-//                    {
-////                        loadFragment(new ViewsBuku());
-//                    }
-//
-////                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(myReservation2.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        }){
-//            @Override
-//            protected Map<String, String> getParams()
-//            {
-//                Map<String, String>  params = new HashMap<String, String>();
-//                params.put("nama_pengguna", nama);
-//                params.put("nama_resto", alamat);
-//                params.put("alamat",resto);
-//                params.put("jumlah_orang", no);
-//                params.put("tanggal", tanggal);
-//                params.put("jam", waktu);
-//
-//                return params;
-//            }
-//        };
-//
-//        queue.add(stringRequest);
-//    }
 }
