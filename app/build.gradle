@@ -95,5 +95,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.0'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    //Unit Testing
+    testCompile 'org.mockito:mockito-all:1.10.19'
 }
 apply plugin: 'com.google.gms.google-services'
