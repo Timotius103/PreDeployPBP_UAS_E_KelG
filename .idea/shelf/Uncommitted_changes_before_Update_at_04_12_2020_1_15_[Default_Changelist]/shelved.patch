@@ -1,0 +1,196 @@
+Index: app/src/main/java/platformpbp/uajy/quickresto/regisReservation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package platformpbp.uajy.quickresto;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.content.SharedPreferences;\r\nimport android.os.AsyncTask;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.view.Window;\r\nimport android.widget.Button;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.material.datepicker.MaterialDatePicker;\r\nimport com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;\r\nimport com.google.android.material.floatingactionbutton.FloatingActionButton;\r\nimport com.google.android.material.textfield.TextInputEditText;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.squareup.picasso.Picasso;\r\n\r\nimport java.util.Calendar;\r\nimport java.util.TimeZone;\r\n\r\nimport platformpbp.uajy.quickresto.model.Reservation;\r\nimport platformpbp.uajy.quickresto.model.Restorant;\r\n\r\n\r\npublic class regisReservation extends AppCompatActivity {\r\n    private Button myReserve,chooseDate;\r\n    TextInputEditText dateReserve,number,time;\r\n    TextInputLayout banyakLayout,tanggalLayout,waktupesanLayout;\r\n    TextView title,user;\r\n    ImageView gambar;\r\n    FloatingActionButton balik;\r\n    double lon,la;\r\n    private String namaresto,alamatRest,url,email,date,waktu;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_regis_reservation);\r\n\r\n        String username;\r\n        Reservation reserv=new Reservation();\r\n        SharePreferenceClass sp=new SharePreferenceClass(regisReservation.this);\r\n        dateReserve=findViewById(R.id.input_date);\r\n        chooseDate=findViewById(R.id.Date);\r\n        number=findViewById(R.id.input_number);\r\n        time=findViewById(R.id.input_time);\r\n\r\n\r\n        lon=getIntent().getDoubleExtra(\"longitutePassing\",0);\r\n        la=getIntent().getDoubleExtra(\"latitudePassing\",0);\r\n\r\n        banyakLayout=findViewById(R.id.input_number_layout);\r\n        tanggalLayout=findViewById(R.id.input_date_layout);\r\n        waktupesanLayout=findViewById(R.id.input_time_layout);\r\n\r\n        alamatRest=getIntent().getStringExtra(\"alamat2\");\r\n        namaresto=getIntent().getStringExtra(\"resto2\");\r\n        title=findViewById(R.id.title_regis_menu);\r\n        title.setText(namaresto);\r\n        gambar=findViewById(R.id.image_resto_detail);\r\n\r\n//        username = sp.getUsernameS();\r\n//        user=findViewById(R.id.UserName);\r\n//        user.setText(username);\r\n\r\n\r\n        url=getIntent().getStringExtra(\"gambar2\");\r\n        Picasso.get().load(url).into(gambar);\r\n\r\n\r\n        balik=findViewById(R.id.floating_back);\r\n        balik.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                Intent intent = new Intent(regisReservation.this,MapRestaurant.class);\r\n                intent.putExtra(\"longitude\",lon);\r\n                intent.putExtra(\"latitude\",la);\r\n                intent.putExtra(\"gambar\",url);\r\n                intent.putExtra(\"resto\",namaresto);\r\n                intent.putExtra(\"alamat\",alamatRest);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n\r\n\r\n        MaterialDatePicker.Builder builder= MaterialDatePicker.Builder.datePicker();\r\n        builder.setTitleText(\"Select a Date\");\r\n\r\n        MaterialDatePicker materialDatePicker=builder.build();\r\n        chooseDate.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                materialDatePicker.show(getSupportFragmentManager(),\"DATE_PICKER\");\r\n\r\n            }\r\n        });\r\n        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {\r\n            @Override\r\n            public void onPositiveButtonClick(Object selection) {\r\n                dateReserve.setText(materialDatePicker.getHeaderText());\r\n                date=dateReserve.getText().toString();\r\n            }\r\n        });\r\n\r\n\r\n        myReserve=findViewById(R.id.submit_regis);\r\n        myReserve.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n\r\n                String banyak = number.getText().toString();\r\n                String tanggal= dateReserve.getText().toString();\r\n                String wktu=time.getText().toString();\r\n\r\n                if(banyak.isEmpty()&&tanggal.isEmpty()&&wktu.isEmpty()) {\r\n                    banyakLayout.setError(\"Please fill fullname\");\r\n                    tanggalLayout.setError(\"Please fill Phone Number\");\r\n                    waktupesanLayout.setError(\"Please fill Email\");\r\n                    Toast.makeText(view.getContext(), \"Please fill full name, phone, email and password\", Toast.LENGTH_SHORT).show();\r\n                }else if(banyak.isEmpty()) {\r\n                    banyakLayout.setError(\"Please fill Number of People\");\r\n                    Toast.makeText(view.getContext(), \"Please fill Number of People\", Toast.LENGTH_SHORT).show();\r\n                }else if(tanggal.isEmpty()) {\r\n                    tanggalLayout.setError(\"Please fill Date Reservation\");\r\n                    Toast.makeText(view.getContext(), \"Please fill Date Reservation\", Toast.LENGTH_SHORT).show();\r\n                }else if(wktu.isEmpty()){\r\n                    waktupesanLayout.setError(\"Please fill Time Reservation\");\r\n                    Toast.makeText(view.getContext(), \"Please fill Time Reservation\", Toast.LENGTH_SHORT).show();\r\n                }else{\r\n                    reserv.setNameRest(namaresto);\r\n                    reserv.setAddress(alamatRest);\r\n                    reserv.setJmlhOrg(Integer.parseInt(number.getText().toString()));\r\n                    reserv.setDateResrv(String.valueOf(date));\r\n                    waktu=time.getText().toString();\r\n                    reserv.setTimeResrv(String.valueOf(waktu));\r\n                    sp.createReseravation(reserv);\r\n                    Intent intent = new Intent(regisReservation.this,MyReservationMenu.class);\r\n                    intent.putExtra(\"resto3\",String.valueOf(namaresto));\r\n                    intent.putExtra(\"alamat3\",String.valueOf(alamatRest));\r\n                    int angka=Integer.valueOf(number.getText().toString());\r\n                    intent.putExtra(\"Number\",String.valueOf(angka));\r\n                    String tanggalan=dateReserve.getText().toString();\r\n                    intent.putExtra(\"Date\",String.valueOf(tanggalan));\r\n                    String wketu=time.getText().toString();\r\n                    intent.putExtra(\"Time\",wketu);\r\n                    startActivity(intent);\r\n                }\r\n\r\n\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/platformpbp/uajy/quickresto/regisReservation.java	(revision 3648464257ba8a6cc9611885808ad987f2d8fb21)
++++ app/src/main/java/platformpbp/uajy/quickresto/regisReservation.java	(date 1606829835421)
+@@ -149,9 +149,6 @@
+                     intent.putExtra("Time",wketu);
+                     startActivity(intent);
+                 }
+-
+-
+-
+             }
+         });
+     }
+Index: app/src/main/java/platformpbp/uajy/quickresto/SignUp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package platformpbp.uajy.quickresto;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.app.NotificationCompat;\r\n\r\nimport android.app.NotificationChannel;\r\nimport android.app.NotificationManager;\r\nimport android.app.PendingIntent;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.os.AsyncTask;\r\nimport android.os.Build;\r\nimport android.os.Bundle;\r\nimport android.util.Base64;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.textfield.TextInputEditText;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.security.MessageDigest;\r\n\r\nimport javax.crypto.Cipher;\r\nimport javax.crypto.spec.SecretKeySpec;\r\n\r\nimport platformpbp.uajy.quickresto.dabase.DatabaseClient;\r\nimport platformpbp.uajy.quickresto.model.User;\r\n\r\npublic class SignUp extends AppCompatActivity {\r\n    private Button signup,back;\r\n    private TextInputEditText fullname,phone,email,password;\r\n    private FirebaseAuth mAuth;\r\n    String enkrip;\r\n    String AES=\"AES\";\r\n    String enEmail;\r\n    private String CHANNEL_ID = \"Channel 1\";\r\n    private TextInputLayout mail2;\r\n    private TextInputLayout pass;\r\n    private TextInputLayout username;\r\n    private TextInputLayout tlpon;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_sign_up);\r\n\r\n\r\n        fullname=(TextInputEditText) findViewById(R.id.name);\r\n        phone=(TextInputEditText) findViewById(R.id.phone);\r\n        signup=(Button)findViewById(R.id.Next);\r\n        back=(Button)findViewById(R.id.back2);\r\n        email=(TextInputEditText)findViewById(R.id.mail);\r\n        password=(TextInputEditText)findViewById(R.id.pass);\r\n\r\n        mail2=(TextInputLayout)findViewById(R.id.mail_layout);\r\n        pass=(TextInputLayout)findViewById(R.id.pass_layout);\r\n        username=(TextInputLayout)findViewById(R.id.FullName_layout) ;\r\n        tlpon=(TextInputLayout)findViewById(R.id.phone_layout);\r\n\r\n        FirebaseDatabase database=FirebaseDatabase.getInstance();\r\n        final DatabaseReference table_user=database.getReference(\"User\");\r\n\r\n        mAuth=FirebaseAuth.getInstance();\r\n\r\n        signup.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                String mail=email.getText().toString();\r\n                String pw=password.getText().toString();\r\n                String name=fullname.getText().toString();\r\n                String tlp=phone.getText().toString();\r\n                if(mail.isEmpty()&&pw.isEmpty()&&name.isEmpty()&&tlp.isEmpty()) {\r\n                    username.setError(\"Please fill fullname\");\r\n                    tlpon.setError(\"Please fill Phone Number\");\r\n                    mail2.setError(\"Please fill Email\");\r\n                    pass.setError((\"Please fill Password\"));\r\n                    Toast.makeText(v.getContext(), \"Please fill full name, phone, email and password\", Toast.LENGTH_SHORT).show();\r\n                }else if(name.isEmpty()) {\r\n                    username.setError(\"Please fill fullname\");\r\n                    Toast.makeText(v.getContext(), \"Please fill full name\", Toast.LENGTH_SHORT).show();\r\n                }else if(tlp.isEmpty()){\r\n                    tlpon.setError(\"Please fill Phone Number\");\r\n                    Toast.makeText(v.getContext(), \"Please fill full phone\", Toast.LENGTH_SHORT).show();\r\n                }else if(mail.isEmpty()){\r\n//            Toast.makeText(this,\"Email invalid\",Toast.LENGTH_SHORT).show();\r\n                    mail2.setError(\"Please fill correctly\");\r\n                    Toast.makeText(v.getContext(),\"Please fill Email\",Toast.LENGTH_SHORT).show();\r\n                }else if(pw.isEmpty()){\r\n                    pass.setError((\"Please fill Password\"));\r\n                    Toast.makeText(v.getContext(),\"Please Enter Password\",Toast.LENGTH_SHORT).show();\r\n                }else  if(!mail.contains(\"@\")){\r\n                    mail2.setError(\"Please fill Email\");\r\n                    Toast.makeText(v.getContext(),\"Email invalid\",Toast.LENGTH_SHORT).show();\r\n                }else if(pw.length()<7) {\r\n                    pass.setError((\"Please fill Password\"));\r\n                    Toast.makeText(v.getContext(), \"Password too short\", Toast.LENGTH_SHORT).show();\r\n                }else {\r\n                    final ProgressDialog mDialog = new ProgressDialog(SignUp.this);\r\n                    mDialog.setMessage(\"Please waiting....\");\r\n                    mDialog.show();\r\n                    table_user.addValueEventListener(new ValueEventListener() {\r\n                        @Override\r\n                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n\r\n                            if (dataSnapshot.child(fullname.getText().toString()).exists()) {\r\n                                mDialog.dismiss();\r\n                                Toast.makeText(SignUp.this, \"Name already exist.\", Toast.LENGTH_SHORT).show();\r\n                            } else {\r\n                                mDialog.dismiss();\r\n                                try {\r\n                                    enEmail = email.getText().toString();\r\n                                    enEmail = encodeUserEmail(enEmail);\r\n                                    if (dataSnapshot.child(enEmail).exists()) {\r\n                                        mDialog.dismiss();\r\n                                        Toast.makeText(SignUp.this, \"Email already exist.\", Toast.LENGTH_SHORT).show();\r\n                                        mDialog.cancel();\r\n\r\n                                    } else {\r\n                                        createNotificationChannel();\r\n                                        addNotification();\r\n                                        Toast.makeText(SignUp.this, \"Sign up successfully.\", Toast.LENGTH_SHORT).show();\r\n                                        enkrip = encrypt(password.getText().toString());\r\n                                        mAuth.createUserWithEmailAndPassword(email.getText().toString(), enkrip)\r\n                                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {\r\n                                                    @Override\r\n                                                    public void onComplete(@NonNull Task<AuthResult> task) {\r\n                                                        UserClass user = new UserClass(fullname.getText().toString(), phone.getText().toString(), email.getText().toString(), enkrip);\r\n                                                        table_user.child(enEmail).setValue(user);\r\n                                                        sendEmailVerification();\r\n                                                        addUser();\r\n\r\n                                                    }\r\n                                                }).addOnFailureListener(new OnFailureListener() {\r\n                                            @Override\r\n                                            public void onFailure(@NonNull Exception e) {\r\n                                                //      Toast.makeText(SignUp.this, \"Failed Register\", Toast.LENGTH_SHORT).show();\r\n                                            }\r\n                                        });\r\n                                        finish();\r\n                                    }\r\n\r\n\r\n                                } catch (Exception e) {\r\n                                    e.printStackTrace();\r\n                                }\r\n\r\n                            }\r\n                        }\r\n\r\n                        @Override\r\n                        public void onCancelled(@NonNull DatabaseError databaseError) {\r\n\r\n                        }\r\n                    });\r\n                }\r\n            }\r\n        });\r\n    }\r\n//\r\n    private String encodeUserEmail(String userEmail) {\r\n        return userEmail.replace(\".\", \",\");\r\n    }\r\n\r\n    private String encrypt(String password) throws Exception{\r\n\r\n        SecretKeySpec key = generateKey(password);\r\n        Cipher c = Cipher.getInstance(AES);\r\n        c.init(Cipher.ENCRYPT_MODE, key);\r\n        byte[] encVal = c.doFinal(password.getBytes());\r\n        String encryptedValue = Base64.encodeToString(encVal, Base64.DEFAULT);\r\n        return encryptedValue;\r\n    }\r\n\r\n    private SecretKeySpec generateKey(String password) throws Exception{\r\n        final MessageDigest digest = MessageDigest.getInstance(\"SHA-256\");\r\n        byte[] bytes = password.getBytes(\"UTF-8\");\r\n        digest.update(bytes, 0, bytes.length);\r\n        byte[] key = digest.digest();\r\n        SecretKeySpec secretKeySpec = new SecretKeySpec(key, \"AES\");\r\n        return secretKeySpec;\r\n    }\r\n    private void sendEmailVerification() {\r\n        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();\r\n        if (user!=null){\r\n            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {\r\n                @Override\r\n                public void onComplete(@NonNull Task<Void> task) {\r\n                    if (task.isSuccessful()){\r\n                        Toast.makeText(SignUp.this,\"Check your Email for verification\",Toast.LENGTH_SHORT).show();\r\n                        mAuth.signOut();\r\n                    }\r\n                }\r\n            });\r\n        }\r\n    }\r\n\r\n////////////////////// INI SIGN UP FIREBASE BIASA ////////////////////////////////////////////////////////////////////////\r\n//    public void signUp(View view){\r\n//        String mail=email.getText().toString();\r\n//        String pw=password.getText().toString();\r\n//\r\n//        ProgressDialog dialog= new ProgressDialog(SignUp.this);\r\n//        dialog.setMessage(\"Please Whait\");\r\n//        dialog.show();\r\n//        if(mail.isEmpty()&&pw.isEmpty()) {\r\n//            mail2.setError(\"Please fill Email\");\r\n//            pass.setError((\"Please fill Password\"));\r\n//            Toast.makeText(this,\"Please fill email and password\",Toast.LENGTH_SHORT).show();\r\n//        }else if(mail.isEmpty()){\r\n////            Toast.makeText(this,\"Email invalid\",Toast.LENGTH_SHORT).show();\r\n//            mail2.setError(\"Please fill correctly\");\r\n//            Toast.makeText(this,\"Please fill Email\",Toast.LENGTH_SHORT).show();\r\n//        }else if(pw.isEmpty()){\r\n//            pass.setError((\"Please fill Password\"));\r\n//            Toast.makeText(this,\"Please Enter Password\",Toast.LENGTH_SHORT).show();\r\n//        }else  if(!mail.contains(\"@\")){\r\n//            mail2.setError(\"Please fill Email\");\r\n//            Toast.makeText(this,\"Email invalid\",Toast.LENGTH_SHORT).show();\r\n//        }else if(pw.length()<7) {\r\n//            pass.setError((\"Please fill Password\"));\r\n//            Toast.makeText(this, \"Password too short\", Toast.LENGTH_SHORT).show();\r\n//        }else{\r\n//\r\n//            mAuth.createUserWithEmailAndPassword(mail, pw)\r\n//                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n//                        @Override\r\n//                        public void onComplete(@NonNull Task<AuthResult> task) {\r\n//\r\n//                            if (task.isSuccessful()) {\r\n//                                // Sign in success, update UI with the signed-in user's information\r\n//                                Log.d(\"Create\", \"createUserWithEmail:success\");\r\n//                                FirebaseUser user = mAuth.getCurrentUser();\r\n//                                startActivity(new Intent(SignUp.this,SignIn.class));\r\n//\r\n//                            } else {\r\n//                                // If sign in fails, display a message to the user.\r\n//                                Log.w(\"Create\", \"createUserWithEmail:failure\", task.getException());\r\n//                                Toast.makeText(SignUp.this, \"Authentication failed.\",\r\n//                                        Toast.LENGTH_SHORT).show();\r\n//                            }\r\n//                        }\r\n//                    });\r\n//        }\r\n//\r\n//    }\r\n///////////////////////////////////////////////////////////////////////////////////////////////////////////////////\r\n\r\n    private void createNotificationChannel(){\r\n        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){\r\n            CharSequence name=\"Channel 1\";\r\n            String description = \"This is Channel 1\";\r\n            int importance = NotificationManager.IMPORTANCE_DEFAULT;\r\n            NotificationChannel channel=new NotificationChannel(CHANNEL_ID,name,importance);\r\n            channel.setDescription(description);\r\n            NotificationManager notificationManager=getSystemService(NotificationManager.class);\r\n            notificationManager.createNotificationChannel(channel);\r\n\r\n        }\r\n    }\r\n\r\n    private void addNotification(){\r\n        NotificationCompat.Builder builder=new NotificationCompat.Builder(this,CHANNEL_ID)\r\n                .setSmallIcon(R.drawable.ic_launcher_background)\r\n                .setContentTitle(\"Hello\")\r\n                .setContentText(\"Terima kasih telah mendaftar. Silahkan verifikasi email anda :)\")\r\n                .setPriority(NotificationCompat.PRIORITY_DEFAULT);\r\n\r\n        Intent notificationIntent= new Intent(this,LoginSignIn.class);\r\n        PendingIntent contentIntent = PendingIntent.getActivity(this,0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);\r\n        builder.setContentIntent(contentIntent);\r\n\r\n        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);\r\n        manager.notify(0, builder.build());\r\n    }\r\n\r\n    private void addUser() {\r\n        final String mail = email.getText().toString();\r\n        final String pwd = password.getText().toString();\r\n        final String nama = fullname.getText().toString();\r\n        final String number = phone.getText().toString();\r\n\r\n        class AddUser extends AsyncTask<Void, Void, Void> {\r\n            @Override\r\n            protected Void doInBackground(Void... voids) {\r\n                User user = new User();\r\n                user.setFullName(nama);\r\n                user.setPhone(number);\r\n                user.setMail(mail);\r\n                user.setPass(pwd);\r\n\r\n\r\n                DatabaseClient.getInstance2(getApplicationContext()).getDatabase()\r\n                        .userDAO()\r\n                        .insert(user);\r\n\r\n                return null;\r\n            }\r\n\r\n            @Override\r\n            protected void onPostExecute(Void aVoid) {\r\n                super.onPostExecute(aVoid);\r\n            }\r\n        }\r\n\r\n        AddUser add = new AddUser();\r\n        add.execute();\r\n    }\r\n    public void back2(View view){\r\n        startActivity(new Intent(SignUp.this,LoginSignIn.class));\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/platformpbp/uajy/quickresto/SignUp.java	(revision 3648464257ba8a6cc9611885808ad987f2d8fb21)
++++ app/src/main/java/platformpbp/uajy/quickresto/SignUp.java	(date 1607011011679)
+@@ -19,6 +19,11 @@
+ import android.widget.Button;
+ import android.widget.Toast;
+ 
++import com.android.volley.RequestQueue;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.StringRequest;
++import com.android.volley.toolbox.Volley;
+ import com.google.android.gms.tasks.OnCompleteListener;
+ import com.google.android.gms.tasks.OnFailureListener;
+ import com.google.android.gms.tasks.Task;
+@@ -33,14 +38,23 @@
+ import com.google.firebase.database.FirebaseDatabase;
+ import com.google.firebase.database.ValueEventListener;
+ 
++import org.json.JSONException;
++import org.json.JSONObject;
++
+ import java.security.MessageDigest;
++import java.util.HashMap;
++import java.util.Map;
+ 
+ import javax.crypto.Cipher;
+ import javax.crypto.spec.SecretKeySpec;
+ 
++import platformpbp.uajy.quickresto.API.RegistAPI;
+ import platformpbp.uajy.quickresto.dabase.DatabaseClient;
+ import platformpbp.uajy.quickresto.model.User;
+ 
++import static com.android.volley.Request.Method.POST;
++import static java.security.AccessController.getContext;
++
+ public class SignUp extends AppCompatActivity {
+     private Button signup,back;
+     private TextInputEditText fullname,phone,email,password;
+@@ -115,7 +129,6 @@
+                     table_user.addValueEventListener(new ValueEventListener() {
+                         @Override
+                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+-
+                             if (dataSnapshot.child(fullname.getText().toString()).exists()) {
+                                 mDialog.dismiss();
+                                 Toast.makeText(SignUp.this, "Name already exist.", Toast.LENGTH_SHORT).show();
+@@ -142,7 +155,7 @@
+                                                         table_user.child(enEmail).setValue(user);
+                                                         sendEmailVerification();
+                                                         addUser();
+-
++                                                        addUsertoAPI(fullname.getText().toString(), phone.getText().toString(), email.getText().toString(), enkrip);
+                                                     }
+                                                 }).addOnFailureListener(new OnFailureListener() {
+                                             @Override
+@@ -286,6 +299,46 @@
+         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+         manager.notify(0, builder.build());
+     }
++    private void addUsertoAPI(final String nama, final String number, final String mail,final String pwd){
++        RequestQueue queue = Volley.newRequestQueue(this);
++
++
++        StringRequest stringRequest = new StringRequest(POST, RegistAPI.URL_REGIST, new Response.Listener<String>() {
++            @Override
++            public void onResponse(String response) {
++                try {
++                    JSONObject obj = new JSONObject(response);
++                    if(obj.getString("status").equals("Success"))
++                    {
++//                        loadFragment(new ViewsBuku());
++                    }
++
++//                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
++                } catch (JSONException e) {
++                    e.printStackTrace();
++                }
++            }
++        }, new Response.ErrorListener() {
++            @Override
++            public void onErrorResponse(VolleyError error) {
++                Toast.makeText(SignUp.this, error.getMessage(), Toast.LENGTH_SHORT).show();
++            }
++        }){
++            @Override
++            protected Map<String, String> getParams()
++            {
++                Map<String, String>  params = new HashMap<String, String>();
++                params.put("name", nama);
++                params.put("phone", number);
++                params.put("email",mail);
++                params.put("password", pwd);
++
++                return params;
++            }
++        };
++
++        queue.add(stringRequest);
++    }
+ 
+     private void addUser() {
+         final String mail = email.getText().toString();
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\r\napply plugin: 'com.google.gms.google-services'\r\n\r\nandroid {\r\n    compileSdkVersion 30\r\n    buildToolsVersion \"29.0.3\"\r\n\r\n    defaultConfig {\r\n        applicationId \"platformpbp.uajy.quickresto\"\r\n        minSdkVersion 26\r\n        targetSdkVersion 30\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'\r\n\r\n        }\r\n    }\r\n\r\n    compileOptions{\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n\r\n    buildFeatures {\r\n        dataBinding true\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation fileTree(dir: \"libs\", include: [\"*.jar\"])\r\n    implementation 'com.google.firebase:firebase-core:17.5.1'\r\n    implementation 'com.google.firebase:firebase-messaging:20.3.0'\r\n    implementation 'com.google.firebase:firebase-analytics:17.6.0'\r\n    implementation 'com.google.firebase:firebase-auth:19.4.0'\r\n\r\n    implementation 'androidx.appcompat:appcompat:1.2.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'\r\n    testImplementation 'junit:junit:4.12'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.2'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'\r\n\r\n    implementation \"com.google.android.material:material:1.2.1\"\r\n    implementation 'com.github.bumptech.glide:glide:4.11.0'\r\n    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'\r\n    //ROOM\r\n    def room_version = \"2.2.5\"\r\n\r\n    implementation \"androidx.room:room-runtime:$room_version\"\r\n    annotationProcessor \"androidx.room:room-compiler:$room_version\"\r\n\r\n    //RECYCLER VIEW\r\n    implementation \"androidx.recyclerview:recyclerview:1.1.0\"\r\n    implementation 'com.firebaseui:firebase-ui-database:1.2.0'\r\n\r\n    implementation 'com.google.firebase:firebase-auth:19.4.0'\r\n    implementation 'com.google.firebase:firebase-auth:19.4.0'\r\n//\r\n    implementation 'com.google.firebase:firebase-database:19.5.0'\r\n//\r\n    implementation 'com.android.support:cardview-v7:'\r\n//    implementation 'com.github.bumptech.glide:glide:4.11.0'\r\n//    implementation 'de.hdodenhof:circleimageview:2.2.0'\r\n//\r\n//    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'\r\n//    implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'\r\n//    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'\r\n    implementation 'com.google.firebase:firebase-storage:19.2.0'\r\n//\r\n//    implementation 'com.squareup.retrofit2:retrofit:2.7.1'\r\n//    implementation 'com.google.code.gson:gson:2.8.6'\r\n//    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'\r\n//    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.7'\r\n\r\n    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'\r\n    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'\r\n    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.12.0'\r\n}\r\napply plugin: 'com.google.gms.google-services'
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision 3648464257ba8a6cc9611885808ad987f2d8fb21)
++++ app/build.gradle	(date 1607009477789)
+@@ -62,25 +62,25 @@
+ 
+     implementation 'com.google.firebase:firebase-auth:19.4.0'
+     implementation 'com.google.firebase:firebase-auth:19.4.0'
+-//
+     implementation 'com.google.firebase:firebase-database:19.5.0'
+-//
++
+     implementation 'com.android.support:cardview-v7:'
+-//    implementation 'com.github.bumptech.glide:glide:4.11.0'
+-//    implementation 'de.hdodenhof:circleimageview:2.2.0'
+-//
+-//    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+-//    implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+-//    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
++
+     implementation 'com.google.firebase:firebase-storage:19.2.0'
+-//
+-//    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+-//    implementation 'com.google.code.gson:gson:2.8.6'
+-//    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+-//    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.7'
++
+ 
+     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
+     implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'
+     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.12.0'
++
++    //VOLLEY ini merupakan library yang memudahkan aplikasi android
++    // untuk mengakses jaringan dengan mudah dan cepat.
++    implementation 'com.android.volley:volley:1.1.0'
++
++    //Picture GLide
++    implementation 'com.github.bumptech.glide:glide:4.11.0'
++
++    //noinspection GradleCompatible
++    implementation 'com.android.support:cardview-v7:25.3.1'
+ }
+-apply plugin: 'com.google.gms.google-services'
+\ No newline at end of file
++apply plugin: 'com.google.gms.google-services'
+Index: app/src/main/java/platformpbp/uajy/quickresto/API/RegistAPI.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/platformpbp/uajy/quickresto/API/RegistAPI.java	(date 1607018943569)
++++ app/src/main/java/platformpbp/uajy/quickresto/API/RegistAPI.java	(date 1607018943569)
+@@ -0,0 +1,10 @@
++package platformpbp.uajy.quickresto.API;
++
++import retrofit2.Retrofit;
++import retrofit2.converter.gson.GsonConverterFactory;
++
++public class RegistAPI {
++    public static final String ROOT_URL = "https://restoquick.000webhostapp.com/";
++    public static final String ROOT_API   = ROOT_URL+ "api/";
++    public static final String URL_REGIST  = ROOT_API+"register";
++}
